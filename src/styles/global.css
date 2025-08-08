@@ -117,12 +117,99 @@
     animation-delay: 200ms;
   }
   
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  
   .animation-delay-400 {
     animation-delay: 400ms;
   }
   
   .animation-delay-600 {
     animation-delay: 600ms;
+  }
+  
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+  
+  /* Custom animations for homepage */
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(-50%, -50%) translateY(0px);
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-20px);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  /* Enhanced hover effects */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  /* Interactive button styles */
+  .btn-interactive {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-interactive::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-interactive:hover::before {
+    left: 100%;
+  }
+  
+  /* Smooth scroll offset for anchor links */
+  .scroll-offset {
+    scroll-margin-top: 100px;
   }
   
   /* Skip to main content for accessibility */
@@ -148,6 +235,46 @@
   .slide-leave-to {
     transform: translateX(100%);
   }
+  
+  /* Loading states and micro-interactions */
+  .loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  /* Form enhancements */
+  .form-field {
+    @apply relative;
+  }
+  
+  .form-field input:focus + label,
+  .form-field textarea:focus + label,
+  .form-field input:not(:placeholder-shown) + label,
+  .form-field textarea:not(:placeholder-shown) + label {
+    @apply text-primary text-xs transform -translate-y-6;
+  }
+  
+  /* Intersection Observer animations */
+  .fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .fade-in-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dark {
@@ -168,4 +295,33 @@
 
 .dark .btn-ghost {
   @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pulse-slow,
+  .animate-float {
+    animation: none;
+  }
+  
+  .hover-lift:hover {
+    transform: none;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }

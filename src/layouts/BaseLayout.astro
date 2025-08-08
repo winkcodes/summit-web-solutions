@@ -72,21 +72,26 @@ const seo = generateSEO({ title, description, image, noindex, canonical: Astro.u
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
+    <!-- Performance optimizations -->
+    <link rel="preload" href="/src/styles/global.css" as="style" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
     <!-- Prefetch DNS for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     
     <!-- Schema.org markup -->
-    <script type="application/ld+json" set:html={JSON.stringify(seo.schema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(seo.schema)} is:inline />
     
     <!-- Analytics -->
     {SITE_CONFIG.analytics.gtag && (
       <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.gtag}`}></script>
-        <script>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.gtag}`} is:inline></script>
+        <script is:inline define:vars={{ gtagId: SITE_CONFIG.analytics.gtag }}>
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', SITE_CONFIG.analytics.gtag);
+          gtag('config', gtagId);
         </script>
       </>
     )}
@@ -99,6 +104,9 @@ const seo = generateSEO({ title, description, image, noindex, canonical: Astro.u
     </main>
     
     {showFooter && <Footer />}
+    
+    <!-- Interactive scripts -->
+    <script src="/src/scripts/homepage-interactions.js" defer is:inline></script>
   </body>
 </html>
 
@@ -124,15 +132,17 @@ if (typeof document !== 'undefined') {
       if (e.target === menu) toggleMenu();
     });
     
-    // Sticky header
+    // Sticky header with throttling
     let lastScroll = 0;
+    let ticking = false;
     const header = document.getElementById('main-header');
     
-    window.addEventListener('scroll', () => {
+    function updateHeader() {
       const currentScroll = window.pageYOffset;
       
       if (currentScroll <= 0) {
         header?.classList.remove('header-scrolled');
+        ticking = false;
         return;
       }
       
@@ -149,6 +159,37 @@ if (typeof document !== 'undefined') {
       }
       
       lastScroll = currentScroll;
+      ticking = false;
+    }
+    
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    }
+    
+    window.addEventListener('scroll', requestTick, { passive: true });
+    
+    // Critical performance optimizations
+    if ('loading' in HTMLImageElement.prototype) {
+      // Browser supports native lazy loading
+      document.querySelectorAll('img[data-lazy]').forEach(img => {
+        (img as HTMLImageElement).loading = 'lazy';
+      });
+    }
+    
+    // Preload critical above-the-fold images
+    const criticalImages: string[] = [
+      // Add any hero or critical images here
+    ];
+    
+    criticalImages.forEach((src: string) => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
     });
   });
 }
