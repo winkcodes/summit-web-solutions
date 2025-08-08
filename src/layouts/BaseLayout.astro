@@ -1,0 +1,155 @@
+---
+import { SITE_CONFIG } from '../config/site';
+import { generateSEO } from '../config/seo';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  containerClass?: string;
+}
+
+const { 
+  title, 
+  description, 
+  image, 
+  noindex, 
+  showHeader = true, 
+  showFooter = true,
+  containerClass = "min-h-screen"
+} = Astro.props;
+
+const seo = generateSEO({ title, description, image, noindex, canonical: Astro.url.href });
+---
+
+<!doctype html>
+<html lang={SITE_CONFIG.lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={SITE_CONFIG.favicon} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO -->
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="keywords" content={SITE_CONFIG.keywords.join(', ')} />
+    <meta name="author" content={SITE_CONFIG.author} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={seo.canonical} />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content={seo.openGraph.type} />
+    <meta property="og:title" content={seo.openGraph.title} />
+    <meta property="og:description" content={seo.openGraph.description} />
+    <meta property="og:image" content={seo.openGraph.image} />
+    <meta property="og:url" content={seo.openGraph.url} />
+    <meta property="og:site_name" content={seo.openGraph.siteName} />
+    <meta property="og:locale" content={seo.openGraph.locale} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content={seo.twitter.card} />
+    <meta name="twitter:site" content={seo.twitter.site} />
+    <meta name="twitter:creator" content={seo.twitter.creator} />
+    <meta name="twitter:title" content={seo.twitter.title} />
+    <meta name="twitter:description" content={seo.twitter.description} />
+    <meta name="twitter:image" content={seo.twitter.image} />
+    
+    <!-- Robots -->
+    {seo.noindex && <meta name="robots" content="noindex, nofollow" />}
+    
+    <!-- Theme -->
+    <meta name="theme-color" content={SITE_CONFIG.themeColor} />
+    
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Prefetch DNS for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    
+    <!-- Schema.org markup -->
+    <script type="application/ld+json" set:html={JSON.stringify(seo.schema)} />
+    
+    <!-- Analytics -->
+    {SITE_CONFIG.analytics.gtag && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.gtag}`}></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', SITE_CONFIG.analytics.gtag);
+        </script>
+      </>
+    )}
+  </head>
+  <body class={`${containerClass} bg-white text-gray-900 antialiased flex flex-col`}>
+    {showHeader && <Header />}
+    
+    <main class="flex-grow">
+      <slot />
+    </main>
+    
+    {showFooter && <Footer />}
+  </body>
+</html>
+
+<script>
+// Inline fallback for critical functionality
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const button = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    
+    function toggleMenu() {
+      menu?.classList.toggle('translate-x-full');
+      document.body.classList.toggle('overflow-hidden');
+    }
+    
+    button?.addEventListener('click', toggleMenu);
+    closeBtn?.addEventListener('click', toggleMenu);
+    
+    // Close on backdrop click
+    menu?.addEventListener('click', function(e) {
+      if (e.target === menu) toggleMenu();
+    });
+    
+    // Sticky header
+    let lastScroll = 0;
+    const header = document.getElementById('main-header');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll <= 0) {
+        header?.classList.remove('header-scrolled');
+        return;
+      }
+      
+      if (currentScroll > lastScroll && currentScroll > 100) {
+        header?.classList.add('header-hidden');
+      } else {
+        header?.classList.remove('header-hidden');
+      }
+      
+      if (currentScroll > 50) {
+        header?.classList.add('header-scrolled');
+      } else {
+        header?.classList.remove('header-scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+  });
+}
+</script>

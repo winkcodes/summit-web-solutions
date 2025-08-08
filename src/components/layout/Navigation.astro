@@ -1,0 +1,74 @@
+---
+import { NAVIGATION } from '../../config/site';
+
+export interface Props {
+  currentPath?: string;
+  variant?: 'desktop' | 'mobile';
+  className?: string;
+}
+
+const { currentPath = '', variant = 'desktop', className = '' } = Astro.props;
+
+const isActive = (href: string) => {
+  if (href === '/' && currentPath === '/') return true;
+  if (href !== '/' && currentPath.startsWith(href)) return true;
+  return false;
+};
+
+const baseClasses = variant === 'desktop' 
+  ? 'hidden lg:flex lg:items-center lg:space-x-8'
+  : 'flex flex-col space-y-4';
+---
+
+<nav class={`${baseClasses} ${className}`} role="navigation" aria-label="Main navigation">
+  {NAVIGATION.map((item) => {
+    const active = isActive(item.href);
+    
+    return (
+      <a
+        href={item.href}
+        class={`
+          ${variant === 'desktop' 
+            ? `nav-link ${active ? 'nav-link-active' : ''}` 
+            : `mobile-nav-link ${active ? 'mobile-nav-link-active' : ''}`
+          }
+        `}
+        aria-current={active ? 'page' : undefined}
+      >
+        {item.name}
+      </a>
+    );
+  })}
+</nav>
+
+<style>
+  .nav-link {
+    @apply relative text-gray-700 hover:text-primary transition-colors duration-200 font-medium;
+  }
+  
+  .nav-link::after {
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+    content: '';
+    transform: translateY(4px);
+  }
+  
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+  
+  .nav-link-active {
+    @apply text-primary;
+  }
+  
+  .nav-link-active::after {
+    @apply w-full;
+  }
+  
+  .mobile-nav-link {
+    @apply text-xl font-semibold text-gray-800 hover:text-primary transition-colors duration-200 py-3 border-b border-gray-100;
+  }
+  
+  .mobile-nav-link-active {
+    @apply text-primary border-primary;
+  }
+</style>

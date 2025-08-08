@@ -1,0 +1,307 @@
+---
+import { Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react';
+import { SITE_CONFIG, SERVICES } from '../../config/site';
+
+const currentYear = new Date().getFullYear();
+
+const serviceLinks = SERVICES.map(service => ({
+  name: service.title,
+  href: `/services#${service.id}`
+}));
+
+const quickLinks = [
+  { name: 'About Us', href: '/about' },
+  { name: 'Portfolio', href: '/portfolio' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Contact', href: '/contact' },
+];
+
+const legalLinks = [
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Cookie Policy', href: '/cookies' },
+];
+
+const socialLinks = [
+  {
+    name: 'Twitter',
+    href: `https://twitter.com/${SITE_CONFIG.social.twitter?.replace('@', '') || ''}`,
+    icon: Twitter,
+    visible: !!SITE_CONFIG.social.twitter
+  },
+  {
+    name: 'LinkedIn',
+    href: `https://linkedin.com/company/${SITE_CONFIG.social.linkedin || ''}`,
+    icon: Linkedin,
+    visible: !!SITE_CONFIG.social.linkedin
+  },
+  {
+    name: 'GitHub',
+    href: `https://github.com/${SITE_CONFIG.social.github || ''}`,
+    icon: Github,
+    visible: !!SITE_CONFIG.social.github
+  }
+].filter(link => link.visible);
+---
+
+<footer class="footer" role="contentinfo">
+  <div class="footer-container">
+    <!-- Main Footer Content -->
+    <div class="footer-content">
+      <!-- Company Info -->
+      <div class="footer-section footer-company">
+        <div class="footer-logo">
+          <a href="/" class="footer-logo-link" aria-label={`${SITE_CONFIG.title} - Home`}>
+            <div class="footer-logo-icon">
+              <svg 
+                viewBox="0 0 32 32" 
+                class="w-8 h-8"
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient id="footer-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#0f172a"/>
+                    <stop offset="100%" style="stop-color:#7c3aed"/>
+                  </linearGradient>
+                </defs>
+                <path 
+                  d="M16 2L26 8v16l-10 6L6 24V8l10-6z M16 6L10 9v14l6 3.5L22 23V9l-6-3z" 
+                  fill="url(#footer-logo-gradient)"
+                />
+                <circle cx="16" cy="16" r="3" fill="white"/>
+              </svg>
+            </div>
+            <span class="footer-logo-text">{SITE_CONFIG.title}</span>
+          </a>
+        </div>
+        
+        <p class="footer-description">
+          {SITE_CONFIG.description}
+        </p>
+        
+        <!-- Contact Info -->
+        <div class="footer-contact">
+          <div class="footer-contact-item">
+            <Mail size={16} aria-hidden="true" />
+            <a 
+              href={`mailto:${SITE_CONFIG.social.email}`}
+              class="footer-contact-link"
+            >
+              {SITE_CONFIG.social.email}
+            </a>
+          </div>
+        </div>
+        
+        <!-- Social Links -->
+        {socialLinks.length > 0 && (
+          <div class="footer-social">
+            <h4 class="footer-social-title">Follow Us</h4>
+            <div class="footer-social-links">
+              {socialLinks.map((social) => (
+                <a
+                  href={social.href}
+                  class="footer-social-link"
+                  aria-label={`Follow us on ${social.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <social.icon size={20} />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <!-- Services Links -->
+      <div class="footer-section">
+        <h3 class="footer-title">Services</h3>
+        <ul class="footer-links">
+          {serviceLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <!-- Quick Links -->
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <ul class="footer-links">
+          {quickLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <!-- Newsletter/CTA -->
+      <div class="footer-section footer-cta">
+        <h3 class="footer-title">Ready to Start?</h3>
+        <p class="footer-cta-description">
+          Let's discuss your project and bring your vision to life.
+        </p>
+        <a href="/contact" class="btn-primary w-full text-center">
+          Get Started Today
+        </a>
+      </div>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>
+          © {currentYear} {SITE_CONFIG.title}. All rights reserved.
+        </p>
+      </div>
+      
+      <div class="footer-legal">
+        <ul class="footer-legal-links">
+          {legalLinks.map((link, index) => (
+            <li>
+              <a href={link.href} class="footer-legal-link">
+                {link.name}
+              </a>
+              {index < legalLinks.length - 1 && (
+                <span class="footer-legal-separator" aria-hidden="true">•</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    @apply bg-gray-900 text-gray-300;
+  }
+  
+  .footer-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .footer-content {
+    @apply py-12 lg:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12;
+  }
+  
+  .footer-section {
+    @apply space-y-4;
+  }
+  
+  .footer-company {
+    @apply md:col-span-2 lg:col-span-1 space-y-6;
+  }
+  
+  .footer-logo {
+    @apply mb-4;
+  }
+  
+  .footer-logo-link {
+    @apply flex items-center space-x-3 text-white hover:text-accent-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg;
+  }
+  
+  .footer-logo-text {
+    @apply text-xl font-bold;
+  }
+  
+  .footer-description {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .footer-contact {
+    @apply space-y-2;
+  }
+  
+  .footer-contact-item {
+    @apply flex items-center space-x-2;
+  }
+  
+  .footer-contact-link {
+    @apply text-sm hover:text-accent-300 transition-colors duration-200;
+  }
+  
+  .footer-social {
+    @apply space-y-3;
+  }
+  
+  .footer-social-title {
+    @apply text-sm font-semibold text-white;
+  }
+  
+  .footer-social-links {
+    @apply flex space-x-3;
+  }
+  
+  .footer-social-link {
+    @apply p-2 text-gray-400 hover:text-accent-300 hover:bg-gray-800 transition-colors duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-2 focus:ring-offset-gray-900;
+  }
+  
+  .footer-title {
+    @apply text-lg font-semibold text-white mb-4;
+  }
+  
+  .footer-links {
+    @apply space-y-2;
+  }
+  
+  .footer-link {
+    @apply text-sm hover:text-accent-300 transition-colors duration-200 block;
+  }
+  
+  .footer-cta {
+    @apply space-y-4;
+  }
+  
+  .footer-cta-description {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .footer-bottom {
+    @apply border-t border-gray-800 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0;
+  }
+  
+  .footer-copyright p {
+    @apply text-sm;
+  }
+  
+  .footer-legal-links {
+    @apply flex flex-wrap items-center space-x-1 text-sm;
+  }
+  
+  .footer-legal-link {
+    @apply hover:text-accent-300 transition-colors duration-200;
+  }
+  
+  .footer-legal-separator {
+    @apply mx-2 text-gray-600;
+  }
+  
+  /* Hover animations */
+  .footer-logo-link:hover .footer-logo-icon svg {
+    @apply transform rotate-12 scale-110;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .footer-content {
+      @apply grid-cols-1 gap-8;
+    }
+    
+    .footer-company {
+      @apply col-span-1;
+    }
+    
+    .footer-bottom {
+      @apply text-center;
+    }
+  }
+</style>

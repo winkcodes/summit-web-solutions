@@ -1,0 +1,131 @@
+---
+import { X } from 'lucide-react';
+import Navigation from './Navigation.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+export interface Props {
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<div 
+  id="mobile-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="mobile-menu-title"
+>
+  <!-- Backdrop -->
+  <div class="mobile-menu-backdrop"></div>
+  
+  <!-- Menu Panel -->
+  <div class="mobile-menu-panel">
+    <!-- Header -->
+    <div class="mobile-menu-header">
+      <h2 id="mobile-menu-title" class="text-xl font-bold text-gray-900">
+        {SITE_CONFIG.title}
+      </h2>
+      <button
+        id="mobile-menu-close"
+        class="mobile-menu-close-button"
+        aria-label="Close menu"
+        type="button"
+      >
+        <X size={24} />
+      </button>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="mobile-menu-nav">
+      <Navigation variant="mobile" currentPath={currentPath} />
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="mobile-menu-cta">
+      <a href="/contact" class="btn-primary w-full text-center">
+        Get Started
+      </a>
+      <div class="mt-4 text-center">
+        <a 
+          href={`tel:${SITE_CONFIG.social.email}`}
+          class="text-sm text-gray-600 hover:text-primary transition-colors"
+        >
+          {SITE_CONFIG.social.email}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mobile-menu {
+    @apply fixed inset-0 z-50 lg:hidden transform translate-x-full transition-transform duration-300 ease-in-out;
+  }
+  
+  .mobile-menu-backdrop {
+    @apply absolute inset-0 bg-black bg-opacity-50;
+  }
+  
+  .mobile-menu-panel {
+    @apply absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl flex flex-col;
+  }
+  
+  .mobile-menu-header {
+    @apply flex items-center justify-between p-6 border-b border-gray-200;
+  }
+  
+  .mobile-menu-close-button {
+    @apply p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg;
+  }
+  
+  .mobile-menu-nav {
+    @apply flex-1 px-6 py-6 overflow-y-auto;
+  }
+  
+  .mobile-menu-cta {
+    @apply p-6 border-t border-gray-200;
+  }
+  
+  /* Animation states */
+  .mobile-menu:not(.translate-x-full) {
+    @apply translate-x-0;
+  }
+  
+  /* Smooth entrance animation for menu items */
+  .mobile-menu-nav :global(.mobile-nav-link) {
+    @apply transform translate-x-4 opacity-0;
+    animation: slideInLeft 0.3s ease-out forwards;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(1)) {
+    animation-delay: 0.1s;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(2)) {
+    animation-delay: 0.15s;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(3)) {
+    animation-delay: 0.2s;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(4)) {
+    animation-delay: 0.25s;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(5)) {
+    animation-delay: 0.3s;
+  }
+  
+  .mobile-menu-nav :global(.mobile-nav-link:nth-child(6)) {
+    animation-delay: 0.35s;
+  }
+  
+  @keyframes slideInLeft {
+    to {
+      @apply transform translate-x-0 opacity-100;
+    }
+  }
+</style>

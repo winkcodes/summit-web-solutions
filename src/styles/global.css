@@ -1,0 +1,171 @@
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/800.css';
+@import '@fontsource/inter/900.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-900 bg-white antialiased;
+  }
+  
+  body.overflow-hidden {
+    overflow: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold leading-tight;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+  
+  h5 {
+    @apply text-lg md:text-xl lg:text-2xl;
+  }
+  
+  h6 {
+    @apply text-base md:text-lg lg:text-xl;
+  }
+  
+  p {
+    @apply text-gray-600 leading-relaxed;
+  }
+  
+  a {
+    @apply transition-colors duration-200;
+  }
+  
+  /* Ensure main content accounts for fixed header */
+  main {
+    @apply pt-16 lg:pt-20;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-800 focus:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-accent text-white hover:bg-accent-800 focus:ring-accent-500;
+  }
+  
+  .btn-outline {
+    @apply btn border-2 border-primary text-primary hover:bg-primary hover:text-white focus:ring-primary-500;
+  }
+  
+  .btn-ghost {
+    @apply btn text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-gray-500;
+  }
+  
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section {
+    @apply py-16 lg:py-24;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 transition-shadow duration-200 hover:shadow-xl;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  .gradient-bg {
+    @apply bg-gradient-to-br from-primary via-primary-800 to-accent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  /* Skip to main content for accessibility */
+  .skip-to-content {
+    @apply absolute left-0 top-0 bg-primary text-white px-4 py-2 text-sm font-medium transform -translate-y-full focus:translate-y-0 transition-transform duration-200 z-50;
+  }
+  
+  /* Focus styles for better accessibility */
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+  
+  /* Smooth animations for mobile menu */
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: transform 0.3s ease;
+  }
+  
+  .slide-enter-from {
+    transform: translateX(100%);
+  }
+  
+  .slide-leave-to {
+    transform: translateX(100%);
+  }
+}
+
+.dark {
+  @apply bg-gray-900 text-white;
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.dark p {
+  @apply text-gray-300;
+}
+
+.dark .card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .btn-ghost {
+  @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
